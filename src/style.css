@@ -1,0 +1,464 @@
+:root {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #333;
+  background-color: #f8f9fa;
+  --primary-color: #4CAF50; /* 草绿色主题色 */
+  --secondary-color: #8BC34A;
+  --accent-color: #CDDC39;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-image: url('https://img.dkdun.cn/v1/2025/17/12744541404dc8b9.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  height: 8em;
+  margin-bottom: 1rem;
+  will-change: filter;
+  transition: filter 300ms, transform 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 1.5em #646cffaa);
+  transform: scale(1.05);
+}
+
+h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.counter-section {
+  margin: 3rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.counter-section p {
+  font-size: 1.2em;
+  color: #7f8c8d;
+  margin: 0.5rem 0;
+}
+
+.counter {
+  font-size: 5em;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 1rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s ease;
+  position: relative;
+  overflow: hidden;
+  height: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.install-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.install-section h2, .features-section h2 {
+  font-size: 1.8em;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.install-section p {
+  color: #7f8c8d;
+  margin-bottom: 1.5rem;
+}
+
+.command-box {
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  position: relative;
+}
+
+.code-header {
+  background-color: #f0f0f0;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.code-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.code-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.code-dot.red {
+  background-color: #ff5f56;
+}
+
+.code-dot.yellow {
+  background-color: #ffbd2e;
+}
+
+.code-dot.green {
+  background-color: #27c93f;
+}
+
+.code-content {
+  position: relative;
+  width: 100%;
+}
+
+code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1em;
+  padding: 1rem;
+  padding-right: 6rem;
+  background-color: #2d2d2d;
+  color: #f8f8f2;
+  display: block;
+  width: 100%;
+  text-align: left;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.command-box button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.4em;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.command-box button:hover {
+  opacity: 1;
+}
+
+.copy-icon {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+
+.mac-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(30, 30, 30, 0.85);
+  color: white;
+  border-radius: 12px;
+  font-size: 1em;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeInOut 2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(2px);
+  width: 280px;
+  overflow: hidden;
+}
+
+.toast-header {
+  background-color: rgba(40, 40, 40, 0.9);
+  padding: 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.toast-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.toast-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.toast-dot:hover {
+  transform: scale(1.1);
+}
+
+.toast-dot.red {
+  background-color: #ff5f56;
+}
+
+.toast-dot.yellow {
+  background-color: #ffbd2e;
+}
+
+.toast-dot.green {
+  background-color: #27c93f;
+}
+
+.toast-content {
+  padding: 1rem;
+  text-align: center;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+  20% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+  80% { opacity: 1; transform: translate(-50%, -50%) translateY(0); }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(20px); }
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.8em 1.5em;
+  font-size: 1em;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(76, 175, 80, 0.2);
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(139, 195, 74, 0.3);
+}
+
+button.copied {
+  background-color: var(--secondary-color);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .counter {
+    font-size: 3.5em;
+  }
+}
+
+.firework {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: explode 1.5s ease-out forwards;
+  opacity: 0;
+  z-index: 10;
+}
+
+@keyframes explode {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(15);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(20);
+    opacity: 0;
+  }
+}
+
+.features-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.features-section h2 {
+  font-size: 1.8em;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.buttons-container a {
+  text-decoration: none;
+}
+
+/* 页脚样式 */
+.footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.footer-content p {
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.github-link:hover {
+  color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.github-icon {
+  transition: transform 0.3s ease;
+}
+
+.github-link:hover .github-icon {
+  transform: rotate(15deg) scale(1.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f5f5f5;
+    background-color: #121212;
+  }
+
+  .container {
+    background-color: #1e1e1e;
+  }
+
+  h1, .install-section h2 {
+    color: #e0e0e0;
+  }
+
+  .counter-section p, .install-section p, .features-section p, .footer-content p {
+    color: #b0b0b0;
+  }
+
+  .footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .github-link {
+    color: #3498db;
+  }
+
+  .github-link:hover {
+    color: #2980b9;
+  }
+
+  .command-box {
+    background-color: #252525;
+  }
+
+  button {
+    background-color: #3498db;
+  }
+
+  button:hover {
+    background-color: #2980b9;
+  }
+
+  code {
+    background-color: #1e1e1e;
+  }
+}
