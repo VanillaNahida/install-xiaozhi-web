@@ -133,7 +133,7 @@ createApp({
     <div class="container">
       <div class="header">
         <img src="/logo.svg" alt="Logo" class="logo" />
-        <h1>小智AI服务器</h1>
+        <h1>小智服务器一键部署脚本</h1>
       </div>
 
       <div class="counter-section">
@@ -143,7 +143,7 @@ createApp({
       </div>
 
       <div class="install-section">
-        <h2>一键安装</h2>
+        <h2>一键安装脚本</h2>
         <p>复制以下命令到终端执行：</p>
         <div class="command-box">
             <div class="code-header">
