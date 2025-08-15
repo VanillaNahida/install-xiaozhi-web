@@ -39,8 +39,8 @@ body {
 }
 
 .container {
-  max-width: 800px;
   width: 100%;
+  max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   background-color: rgba(255, 255, 255, 0.9);
@@ -48,6 +48,8 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   text-align: center;
   transition: transform 0.3s ease;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .container:hover {
@@ -137,6 +139,7 @@ h1 {
   overflow: hidden;
   border: 1px solid #e0e0e0;
   position: relative;
+  box-sizing: border-box;
 }
 
 .code-header {
@@ -187,7 +190,9 @@ code {
   width: 100%;
   text-align: left;
   overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .command-box button {
@@ -310,9 +315,12 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* 平板和大屏手机断点 */
 @media (max-width: 768px) {
   .container {
     padding: 1.5rem;
+    max-width: 100%;
+    margin: 0 1rem;
   }
 
   h1 {
@@ -321,6 +329,88 @@ button:focus-visible {
 
   .counter {
     font-size: 3.5em;
+  }
+
+  .install-section h2, .features-section h2 {
+    font-size: 1.5em;
+  }
+}
+
+/* 标准手机断点 */
+@media (max-width: 480px) {
+  body {
+    padding: 1rem;
+  }
+  
+  .container {
+    padding: 1.2rem;
+    margin: 0 0.5rem;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+  }
+  
+  .counter {
+    font-size: 3em;
+  }
+  
+  .command-box {
+    margin-bottom: 1.5rem;
+  }
+  
+  code {
+    font-size: 0.85em;
+    padding: 0.8rem;
+    padding-right: 5rem;
+  }
+  
+  button {
+    padding: 0.7em 1.2em;
+    font-size: 0.9em;
+  }
+  
+  .command-box button {
+    right: 0.5rem;
+    padding: 0.3em;
+  }
+  
+  .buttons-container {
+    gap: 0.8rem;
+  }
+  
+  .install-section h2, .features-section h2 {
+    font-size: 1.3em;
+  }
+}
+
+/* 小屏幕手机断点 */
+@media (max-width: 360px) {
+  .container {
+    padding: 1rem;
+    margin: 0;
+  }
+  
+  h1 {
+    font-size: 1.6em;
+  }
+  
+  .counter {
+    font-size: 2.5em;
+  }
+  
+  code {
+    font-size: 0.85em;
+  }
+  
+  button {
+    padding: 0.6em 1em;
+    font-size: 0.85em;
+  }
+  
+  .mac-toast {
+    width: 240px;
+    font-size: 0.9em;
   }
 }
 
