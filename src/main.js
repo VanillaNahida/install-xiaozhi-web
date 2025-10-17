@@ -177,11 +177,14 @@ createApp({
       <div class="features-section">
         <h2>功能入口</h2>
         <div class="buttons-container">
-          <a href="/wificonfig/" target="_blank">
+          <a href="/tools/wificonfig/" target="_blank">
             <button>声波配网页</button>
           </a>
-          <a href="/test_page/" target="_blank">
+          <a href="/tools/test_page/" target="_blank">
             <button>小智服务端测试页</button>
+          </a>
+          <a href="/tools/assets-generator/" target="_blank">
+            <button>小智资源生成页</button>
           </a>
         </div>
       </div>

@@ -1,0 +1,425 @@
+<template>
+  <div class="space-y-6">
+    <div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">表情集合配置</h3>
+      <p class="text-gray-600">选择预设表情包或自定义表情图片。每个表情包包含21种不同情绪的表情。</p>
+    </div>
+
+    <!-- 表情类型选择 -->
+    <div class="space-y-4">
+      <div class="flex space-x-4">
+        <button
+          @click="setEmojiType('preset')"
+          :class="[
+            'px-4 py-2 border rounded-lg transition-colors',
+            modelValue.type === 'preset'
+              ? 'border-primary-500 bg-primary-50 text-primary-700'
+              : 'border-gray-300 hover:border-gray-400'
+          ]"
+        >
+          预设表情包
+        </button>
+        <button
+          @click="setEmojiType('custom')"
+          :class="[
+            'px-4 py-2 border rounded-lg transition-colors',
+            modelValue.type === 'custom'
+              ? 'border-primary-500 bg-primary-50 text-primary-700'
+              : 'border-gray-300 hover:border-gray-400'
+          ]"
+        >
+          自定义表情包
+        </button>
+      </div>
+    </div>
+
+    <!-- 预设表情包选择 -->
+    <div v-if="modelValue.type === 'preset'" class="space-y-4">
+      <h4 class="font-medium text-gray-900">选择预设表情包</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div
+          v-for="pack in presetEmojis"
+          :key="pack.id"
+          @click="selectPresetEmoji(pack.id)"
+          :class="[
+            'border-2 rounded-lg p-4 cursor-pointer transition-all',
+            modelValue.preset === pack.id
+              ? 'border-primary-500 bg-primary-50'
+              : 'border-gray-200 hover:border-gray-300'
+          ]"
+        >
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <h5 class="font-medium text-gray-900">{{ pack.name }}</h5>
+              <p class="text-sm text-gray-600">{{ pack.description }}</p>
+              <div class="text-xs text-gray-500 mt-1">
+                尺寸: {{ pack.size }}px × {{ pack.size }}px
+              </div>
+            </div>
+            <div 
+              v-if="modelValue.preset === pack.id"
+              class="flex-shrink-0 ml-3"
+            >
+              <div class="w-5 h-5 bg-primary-500 rounded-full flex items-center justify-center">
+                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 表情预览网格 -->
+          <div class="grid grid-cols-7 gap-1 justify-items-center">
+            <div
+              v-for="emotion in pack.preview"
+              :key="emotion"
+              :style="{ width: pack.size + 'px', height: pack.size + 'px' }"
+              class="bg-gray-100 rounded flex items-center justify-center"
+            >
+              <img 
+                :src="getPresetEmojiUrl(pack.id, emotion)"
+                :alt="emotion"
+                :style="{ width: pack.size + 'px', height: pack.size + 'px' }"
+                class="object-contain rounded"
+                @error="handleImageError"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 自定义表情包 -->
+    <div v-if="modelValue.type === 'custom'" class="space-y-6">
+      <h4 class="font-medium text-gray-900">自定义表情包配置</h4>
+      
+      <!-- 基本配置 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- 图片尺寸 -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">图片宽度 (px)</label>
+          <input
+            type="number"
+            v-model.number="localCustom.size.width"
+            min="16"
+            max="200"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          >
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">图片高度 (px)</label>
+          <input
+            type="number"
+            v-model.number="localCustom.size.height"
+            min="16"
+            max="200"
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+          >
+        </div>
+      </div>
+
+      <!-- 表情图片上传 -->
+      <div class="space-y-4">
+        <h5 class="font-medium text-gray-900">上传表情图片</h5>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+          <div
+            v-for="emotion in emotionList"
+            :key="emotion.key"
+            class="space-y-2"
+          >
+            <div class="text-center">
+              <div class="text-lg mb-1">{{ emotion.emoji }}</div>
+              <div class="text-xs text-gray-600">{{ emotion.name }}</div>
+              <div v-if="emotion.key === 'neutral'" class="text-xs text-red-500">必需</div>
+            </div>
+            
+            <div 
+              @drop="(e) => handleFileDrop(e, emotion.key)"
+              @dragover.prevent
+              @dragenter.prevent
+              :class="[
+                'border-2 border-dashed rounded-lg p-2 text-center cursor-pointer transition-colors aspect-square flex flex-col items-center justify-center',
+                modelValue.custom.images[emotion.key]
+                  ? 'border-green-300 bg-green-50'
+                  : emotion.key === 'neutral'
+                    ? 'border-red-300 bg-red-50'
+                    : 'border-gray-300 hover:border-gray-400'
+              ]"
+            >
+              <input
+                :ref="emotion.key + 'Input'"
+                type="file"
+                accept=".png,.gif"
+                @change="(e) => handleFileSelect(e, emotion.key)"
+                class="hidden"
+              >
+              
+              <div v-if="!modelValue.custom.images[emotion.key]" @click="$refs[emotion.key + 'Input'][0]?.click()">
+                <svg class="w-6 h-6 text-gray-400 mx-auto mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                <div class="text-xs text-gray-500">点击上传</div>
+              </div>
+              
+              <div v-else class="w-full h-full relative">
+                <img 
+                  v-if="getImagePreview(emotion.key)"
+                  :src="getImagePreview(emotion.key)" 
+                  :alt="emotion.name"
+                  class="w-full h-full object-cover rounded"
+                  @error="handleImageError"
+                >
+                <button
+                  @click="removeImage(emotion.key)"
+                  class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="text-xs text-gray-500 mt-2">
+          * 必须上传 neutral 默认表情，其他表情可选。如果不上传其他表情，将使用默认表情代替。
+        </div>
+      </div>
+    </div>
+
+    <!-- 当前配置状态 -->
+    <div v-if="hasValidConfig" class="bg-green-50 border border-green-200 rounded-lg p-4">
+      <div class="flex">
+        <div class="flex-shrink-0">
+          <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h4 class="text-sm font-medium text-green-800">表情配置完成</h4>
+          <div class="mt-1 text-sm text-green-700">
+            {{ getConfigSummary() }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, watch } from 'vue'
+import StorageHelper from '@/utils/StorageHelper.js'
+
+const props = defineProps({
+  modelValue: {
+    type: Object,
+    required: true
+  }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+const presetEmojis = [
+  {
+    id: 'twemoji32',
+    name: 'Twemoji 32x32',
+    description: 'Twitter表情包，32×32像素',
+    size: 32,
+    preview: ['neutral', 'happy', 'laughing', 'funny', 'sad', 'angry', 'crying']
+  },
+  {
+    id: 'twemoji64',
+    name: 'Twemoji 64x64', 
+    description: 'Twitter表情包，64×64像素',
+    size: 64,
+    preview: ['neutral', 'happy', 'laughing', 'funny', 'sad', 'angry', 'crying']
+  }
+]
+
+const emotionList = [
+  { key: 'neutral', name: '默认', emoji: '😶' },
+  { key: 'happy', name: '开心', emoji: '🙂' },
+  { key: 'laughing', name: '大笑', emoji: '😆' },
+  { key: 'funny', name: '搞笑', emoji: '😂' },
+  { key: 'sad', name: '伤心', emoji: '😔' },
+  { key: 'angry', name: '生气', emoji: '😠' },
+  { key: 'crying', name: '哭泣', emoji: '😭' },
+  { key: 'loving', name: '喜爱', emoji: '😍' },
+  { key: 'embarrassed', name: '尴尬', emoji: '😳' },
+  { key: 'surprised', name: '惊讶', emoji: '😯' },
+  { key: 'shocked', name: '震惊', emoji: '😱' },
+  { key: 'thinking', name: '思考', emoji: '🤔' },
+  { key: 'winking', name: '眨眼', emoji: '😉' },
+  { key: 'cool', name: '酷炫', emoji: '😎' },
+  { key: 'relaxed', name: '放松', emoji: '😌' },
+  { key: 'delicious', name: '美味', emoji: '🤤' },
+  { key: 'kissy', name: '飞吻', emoji: '😘' },
+  { key: 'confident', name: '自信', emoji: '😏' },
+  { key: 'sleepy', name: '困倦', emoji: '😴' },
+  { key: 'silly', name: '调皮', emoji: '😜' },
+  { key: 'confused', name: '困惑', emoji: '🙄' }
+]
+
+const localCustom = ref({
+  size: { width: 32, height: 32 }
+})
+
+const hasValidConfig = computed(() => {
+  return props.modelValue.preset || props.modelValue.custom.images.neutral
+})
+
+const setEmojiType = (type) => {
+  // 避免重复设置相同类型
+  if (props.modelValue.type === type) return
+  
+  const newValue = { ...props.modelValue, type }
+  
+  if (type === 'preset') {
+    newValue.preset = props.modelValue.preset || 'twemoji32'
+    newValue.custom = {
+      ...props.modelValue.custom,
+      images: {}
+    }
+  } else if (type === 'custom') {
+    newValue.preset = ''
+    newValue.custom = {
+      ...props.modelValue.custom,
+      images: props.modelValue.custom.images || {}
+    }
+  }
+  
+  emit('update:modelValue', newValue)
+}
+
+const selectPresetEmoji = (id) => {
+  // 避免重复选择相同预设
+  if (props.modelValue.preset === id) return
+  
+  emit('update:modelValue', {
+    ...props.modelValue,
+    preset: id,
+    custom: {
+      ...props.modelValue.custom,
+      images: {}
+    }
+  })
+}
+
+const handleFileSelect = (event, emotionKey) => {
+  const file = event.target.files[0]
+  if (file) {
+    updateEmojiImage(emotionKey, file)
+  }
+}
+
+const handleFileDrop = (event, emotionKey) => {
+  event.preventDefault()
+  const files = event.dataTransfer.files
+  if (files.length > 0) {
+    updateEmojiImage(emotionKey, files[0])
+  }
+}
+
+const updateEmojiImage = async (emotionKey, file) => {
+  const validFormats = ['png', 'gif']
+  const fileExtension = file.name.split('.').pop().toLowerCase()
+  
+  if (validFormats.includes(fileExtension)) {
+    emit('update:modelValue', {
+      ...props.modelValue,
+      custom: {
+        ...props.modelValue.custom,
+        size: localCustom.value.size,
+        images: {
+          ...props.modelValue.custom.images,
+          [emotionKey]: file
+        }
+      }
+    })
+
+    // 自动保存表情文件到存储
+    await StorageHelper.saveEmojiFile(emotionKey, file, {
+      size: localCustom.value.size,
+      format: fileExtension
+    })
+  } else {
+    alert('请选择有效的PNG或GIF格式图片')
+  }
+}
+
+const removeImage = async (emotionKey) => {
+  const newImages = { ...props.modelValue.custom.images }
+  delete newImages[emotionKey]
+  
+  emit('update:modelValue', {
+    ...props.modelValue,
+    custom: {
+      ...props.modelValue.custom,
+      images: newImages
+    }
+  })
+
+  // 删除存储中的表情文件
+  await StorageHelper.deleteEmojiFile(emotionKey)
+}
+
+const getPresetEmojiUrl = (packId, emotion) => {
+  const size = packId === 'twemoji64' ? '64' : '32'
+  return `./static/twemoji${size}/${emotion}.png`
+}
+
+const getImagePreview = (emotionKey) => {
+  if (props.modelValue.type === 'preset') {
+    return getPresetEmojiUrl(props.modelValue.preset, emotionKey)
+  } else {
+    const file = props.modelValue.custom.images[emotionKey]
+    // 仅当为 File 或 Blob 时创建预览，避免恢复后占位对象导致报错
+    if (file instanceof File || file instanceof Blob) {
+      return URL.createObjectURL(file)
+    }
+    return null
+  }
+}
+
+const handleImageError = (event) => {
+  console.warn('Failed to load emoji image:', event.target.src)
+  // 可以设置一个默认的fallback图片
+  event.target.style.display = 'none'
+}
+
+const getConfigSummary = () => {
+  if (props.modelValue.type === 'preset') {
+    const preset = presetEmojis.find(p => p.id === props.modelValue.preset)
+    return preset ? `使用预设表情包: ${preset.name}` : ''
+  } else {
+    const imageCount = Object.keys(props.modelValue.custom.images).length
+    const size = localCustom.value.size
+    return `自定义表情包: ${imageCount} 张图片 (${size.width}×${size.height}px)`
+  }
+}
+
+// 移除可能导致无限递归的 watch
+// 使用 computed 来同步 localCustom，避免双向绑定冲突
+watch(() => localCustom.value.size, (newSize) => {
+  if (props.modelValue.type === 'custom') {
+    const currentCustom = props.modelValue.custom
+    // 只在尺寸实际值改变时触发更新
+    if (JSON.stringify(currentCustom.size) !== JSON.stringify(newSize)) {
+      emit('update:modelValue', {
+        ...props.modelValue,
+        custom: {
+          ...currentCustom,
+          size: newSize
+        }
+      })
+    }
+  }
+}, { deep: true })
+
+// 初始化 localCustom
+if (props.modelValue.custom.size) {
+  localCustom.value = {
+    size: { ...props.modelValue.custom.size }
+  }
+}
+</script>
