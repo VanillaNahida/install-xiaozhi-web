@@ -242,21 +242,6 @@ createApp({
         </div>
       </div>
 
-      <div class="features-section">
-        <h2>功能入口</h2>
-        <div class="buttons-container">
-          <a href="/tools/wificonfig/" target="_blank">
-            <button>声波配网页</button>
-          </a>
-          <a href="/tools/test_page/" target="_blank">
-            <button>小智服务端测试页</button>
-          </a>
-          <a href="/tools/assets-generator/" target="_blank">
-            <button>小智资源生成页</button>
-          </a>
-        </div>
-      </div>
-
       <footer class="footer">
         <div class="footer-content">
           <p>作者：香草味的纳西妲喵</p>
