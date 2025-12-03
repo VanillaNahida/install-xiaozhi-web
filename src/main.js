@@ -8,8 +8,11 @@ createApp({
     // 响应式数据
     const count = ref(0)
     const isCounting = ref(false)
-    const installCommand = 'sudo bash -c "$(wget -qO- https://xiaozhi.xcnahida.cn/inst.sh)"'
+    const recommendedCommand = 'sudo bash -c "$(wget -qO- xiaozhi.xcnahida.cn)"'
+    const alternateCommand1 = 'sudo bash -c "$(wget -qO- https://ghfast.top/https://raw.githubusercontent.com/VanillaNahida/Install_xiaozhi-server/refs/heads/main/install_whiptail.sh)"'
+    const alternateCommand2 = 'sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/VanillaNahida/Install_xiaozhi-server/refs/heads/main/install_whiptail.sh)"'
     const copied = ref(false)
+    const copiedCommand = ref('')
 
     // 获取访问计数
     const fetchCount = async () => {
@@ -30,11 +33,15 @@ createApp({
     }
 
     // 复制命令到剪贴板
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(installCommand)
+    const copyToClipboard = (command, commandName) => {
+      navigator.clipboard.writeText(command)
         .then(() => {
           copied.value = true
-          setTimeout(() => copied.value = false, 2000)
+          copiedCommand.value = commandName
+          setTimeout(() => {
+            copied.value = false
+            copiedCommand.value = ''
+          }, 2000)
         })
         .catch(err => {
           console.error('Failed to copy: ', err)
@@ -123,8 +130,11 @@ createApp({
     return {
       count,
       formatNumber,
-      installCommand,
+      recommendedCommand,
+      alternateCommand1,
+      alternateCommand2,
       copied,
+      copiedCommand,
       copyToClipboard
     }
   },
@@ -133,7 +143,22 @@ createApp({
     <div class="container">
       <div class="header">
         <img src="/logo.svg" alt="Logo" class="logo" />
-        <h1>小智服务器一键部署脚本</h1>
+        <h1>小智AI相关资源导航页</h1>
+      </div>
+
+      <div class="features-section">
+        <h2>功能入口</h2>
+        <div class="buttons-container">
+          <a href="/tools/wificonfig/" target="_blank">
+            <button>声波配网页</button>
+          </a>
+          <a href="/tools/test_page/" target="_blank">
+            <button>小智服务端测试页</button>
+          </a>
+          <a href="/tools/assets-generator/" target="_blank">
+            <button>小智资源生成页</button>
+          </a>
+        </div>
       </div>
 
       <div class="counter-section">
@@ -145,33 +170,76 @@ createApp({
       <div class="install-section">
         <h2>一键安装脚本</h2>
         <p>复制以下命令到终端执行：</p>
-        <div class="command-box">
-            <div class="code-header">
-              <div class="code-dots">
-                <div class="code-dot red"></div>
-                <div class="code-dot yellow"></div>
-                <div class="code-dot green"></div>
-              </div>
-            </div>
-            <div class="code-content">
-              <code>{{ installCommand }}</code>
-              <button @click="copyToClipboard" :class="{ 'copied': copied }">
-                <img src="/copy-icon.svg" alt="复制" class="copy-icon" />
-              </button>
-            </div>
-            <div class="mac-toast" v-if="copied">
-              <div class="toast-header">
-                <div class="toast-dots">
-                  <div class="toast-dot red"></div>
-                  <div class="toast-dot yellow"></div>
-                  <div class="toast-dot green"></div>
+        
+        <div class="command-group">
+          <h3>推荐命令（本站加速）：</h3>
+          <div class="command-box">
+              <div class="code-header">
+                <div class="code-dots">
+                  <div class="code-dot red"></div>
+                  <div class="code-dot yellow"></div>
+                  <div class="code-dot green"></div>
                 </div>
               </div>
-              <div class="toast-content">
-                🎉复制成功！
+              <div class="code-content">
+                <code>{{ recommendedCommand }}</code>
+                <button @click="copyToClipboard(recommendedCommand, '推荐命令')" :class="{ 'copied': copied && copiedCommand === '推荐命令' }">
+                  <img src="/copy-icon.svg" alt="复制" class="copy-icon" />
+                </button>
               </div>
+          </div>
+        </div>
+        
+        <div class="command-group">
+          <h3>备用命令1（ghfast镜像源）：</h3>
+          <div class="command-box">
+              <div class="code-header">
+                <div class="code-dots">
+                  <div class="code-dot red"></div>
+                  <div class="code-dot yellow"></div>
+                  <div class="code-dot green"></div>
+                </div>
+              </div>
+              <div class="code-content">
+                <code>{{ alternateCommand1 }}</code>
+                <button @click="copyToClipboard(alternateCommand1, '')" :class="{ 'copied': copied && copiedCommand === '' }">
+                  <img src="/copy-icon.svg" alt="复制" class="copy-icon" />
+                </button>
+              </div>
+          </div>
+        </div>
+        
+        <div class="command-group">
+          <h3>备用命令2（GitHub源，不推荐国内使用）：</h3>
+          <div class="command-box">
+              <div class="code-header">
+                <div class="code-dots">
+                  <div class="code-dot red"></div>
+                  <div class="code-dot yellow"></div>
+                  <div class="code-dot green"></div>
+                </div>
+              </div>
+              <div class="code-content">
+                <code>{{ alternateCommand2 }}</code>
+                <button @click="copyToClipboard(alternateCommand2, '')" :class="{ 'copied': copied && copiedCommand === '' }">
+                  <img src="/copy-icon.svg" alt="复制" class="copy-icon" />
+                </button>
+              </div>
+          </div>
+        </div>
+        
+        <div class="mac-toast" v-if="copied">
+          <div class="toast-header">
+            <div class="toast-dots">
+              <div class="toast-dot red"></div>
+              <div class="toast-dot yellow"></div>
+              <div class="toast-dot green"></div>
             </div>
           </div>
+          <div class="toast-content">
+            🎉{{ copiedCommand }}复制成功！
+          </div>
+        </div>
       </div>
 
       <div class="features-section">
@@ -198,6 +266,9 @@ createApp({
             </svg>
             浏览站点GitHub仓库页
           </a>
+        </div>
+        <div class="icp-info">
+          <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2025161794号</a>
         </div>
       </footer>
     </div>

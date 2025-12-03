@@ -127,13 +127,24 @@ h1 {
   margin-bottom: 1.5rem;
 }
 
+.command-group {
+  margin-bottom: 2rem;
+}
+
+.command-group h3 {
+  font-size: 1.2em;
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+  text-align: left;
+  padding-left: 0.5rem;
+}
+
 .command-box {
   display: flex;
   flex-direction: column;
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 0;
-  margin-bottom: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   width: 100%;
   overflow: hidden;
@@ -471,6 +482,23 @@ button:focus-visible {
   text-align: center;
 }
 
+/* ICP备案信息样式 */
+.icp-info {
+  margin-top: 1rem;
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.icp-info a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.icp-info a:hover {
+  color: var(--secondary-color);
+}
+
 .footer-content {
   display: flex;
   flex-direction: column;
@@ -550,5 +578,20 @@ button:focus-visible {
 
   code {
     background-color: #1e1e1e;
+  }
+  .icp-info {
+    text-align: center;
+    color: #b0b0b0;
+    margin-top: 1rem;
+  }
+
+  .icp-info a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .icp-info a:hover {
+    color: #2980b9;
   }
 }
