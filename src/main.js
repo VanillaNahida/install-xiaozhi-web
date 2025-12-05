@@ -253,7 +253,7 @@ createApp({
           </a>
         </div>
         <div class="icp-info">
-          <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2025161794号</a>
+          <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2025161794号-1</a>
         </div>
       </footer>
     </div>
