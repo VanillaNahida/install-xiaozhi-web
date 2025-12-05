@@ -12,7 +12,42 @@
       margin: 0;
       padding: 2rem 1rem;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .icp-info {
+      margin-top: auto;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
+    .icp-info a {
+      color: #666;
+      text-decoration: none;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .icp-info a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: #4a90e2;
+      transition: width 0.3s ease;
+    }
+    .icp-info a:hover {
+      color: #4a90e2;
+      background-color: rgba(74, 144, 226, 0.08);
+    }
+    .icp-info a:hover::after {
+      width: 100%;
     }
     .card {
       background: #fff;
@@ -205,5 +240,8 @@
       audio.onended = null;  // 清除事件监听
     }
   </script>
+  <div class="icp-info">
+    <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2025161794号-1</a>
+  </div>
 </body>
 </html>

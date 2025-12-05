@@ -44,6 +44,44 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0,0,0,0.2);
         }
+        
+        .icp-info {
+            margin-top: auto;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        .icp-info a {
+            color: #666;
+            text-decoration: none;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .icp-info a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #1a73e8;
+            transition: width 0.3s ease;
+        }
+        
+        .icp-info a:hover {
+            color: #1a73e8;
+            background-color: rgba(26, 115, 232, 0.08);
+        }
+        
+        .icp-info a:hover::after {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -61,6 +99,9 @@
         <button class="nav-button" onclick="window.location.href='./abbreviated_version/index.html'">
             精简版本测试
         </button>
+    </div>
+    <div class="icp-info">
+      <a href="https://beian.miit.gov.cn" target="_blank">鄂ICP备2025161794号-1</a>
     </div>
 </body>
 </html>
